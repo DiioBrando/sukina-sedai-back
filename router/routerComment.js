@@ -1,5 +1,5 @@
 import Router from 'express';
-import PostController from './PostController.js';
+import PostController from '../controller/post-comment/post/PostController.js';
 
 const routerComment = new Router();
 

@@ -1,10 +1,11 @@
-import PostService from './PostService.js';
+class BaseController {
+    constructor(model) {
+        this.model = model;
+    }
 
-
-class PostController {
     async create(req, res) {
         try {
-            const post = await PostService.create(req.body, req.files.picture);
+            const post = await this.model.create(req.body);
             res.json(post);
         } catch (e) {
             res.status(500).json(e.message);
@@ -12,7 +13,7 @@ class PostController {
     }
     async getAll(req, res) {
         try {
-            const post = await PostService.getAll();
+            const post = await this.model.getAll();
             return res.json(post);
         } catch (e) {
             res.status(500).json(e.message);
@@ -20,7 +21,7 @@ class PostController {
     }
     async getOne(req, res) {
         try {
-            const postFind = await PostService.getOne(req.params.id);
+            const postFind = await this.model.getOne(req.params.id);
             return res.json(postFind);
         } catch (e) {
             res.status(500).json(e.message);
@@ -28,7 +29,7 @@ class PostController {
     }
     async update(req, res) {
         try {
-            const updatePost = await PostService.update(req.body);
+            const updatePost = await this.model.update(req.body);
             return res.json(updatePost);
         } catch (e) {
             res.status(500).json(e.message);
@@ -36,9 +37,9 @@ class PostController {
     }
 
     async delete(req, res) {
-        const deletePost = await PostService.delete(req.params.id);
+        const deletePost = await this.model.delete(req.params.id);
         return res.json(deletePost);
     }
 }
 
-export default new PostController();
+export default BaseController;

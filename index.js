@@ -1,6 +1,7 @@
 import express from 'express';
 import mongoose from 'mongoose';
-import routerComment from './routerComment.js';
+import routerComment from './router/routerComment.js';
+import routerUser from "./router/routerUser.js";
 import fileUpload from 'express-fileupload';
 
 const PORT = 5001;
@@ -12,7 +13,10 @@ const app = express();
 app.use(express.json());
 app.use(express.static('static'));
 app.use(fileUpload({}));
-app.use('/api', routerComment);
+
+
+app.use('/api/comments', routerComment);
+app.use('/api/users', routerUser);
 
 async function startApp(){
     try {
