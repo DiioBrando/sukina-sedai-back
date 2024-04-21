@@ -1,10 +1,11 @@
 import express from 'express';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
-import routerComment from './router/routerComment.js';
-import routerUser from './router/routerUser.js';
 import fileUpload from 'express-fileupload';
 import cors from 'cors';
+import cookieParser from 'cookie-parser';
+import routerUser from './router/routerUser.js';
+import { ErrorMiddleware } from "./middlewaree/ErrorMiddleware.js";
 
 
 const app = express();
@@ -13,10 +14,14 @@ dotenv.config();
 app.use(express.json());
 app.use(express.static('static'));
 app.use(fileUpload({}));
-app.use(cors());
+app.use(cookieParser());
+app.use(cors({ origin: 'http://localhost:3000' }));
 
-app.use('/api/comments', routerComment);
-app.use('/api/users', routerUser);
+app.use('/api', routerUser);
+
+
+// middleware для ошибок подключается последним в цепочке
+app.use(ErrorMiddleware);
 
 async function startApp(){
     try {
