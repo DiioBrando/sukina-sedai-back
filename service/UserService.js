@@ -19,8 +19,8 @@ class UserService {
             const userRole = await Role.findOne({ value: "user" } );
             const activationLink = uuid.v4();
 
-            await MailService.sendMailActivation(email, `${process.env.API_URL}/api/activate/${activationLink}`);
             const user = await User.create({ login, email, password: hashPass, roles: [userRole.value] , activationLink });
+            await MailService.sendMailActivation(email, `${process.env.API_URL}/api/activate/${activationLink}`);
 
             const userDto = new UserDTO(user);
             const tokens = TokenService.generationToken({ ...userDto });
@@ -44,7 +44,6 @@ class UserService {
 
         const userDto = new UserDTO(user);
         const tokens = TokenService.generationToken({ ...userDto });
-        console.log(userDto.id)
         await TokenService.saveToken(userDto.id, tokens.refreshToken);
         return {
             ...tokens,
@@ -68,8 +67,27 @@ class UserService {
 
     }
 
-    async refresh(req, res, next) {
-
+    async refresh(refreshToken) {
+        if(!refreshToken) {
+            throw ApiError.UnauthorizedError();
+        }
+        const userData = await TokenService.validationRefreshToken(refreshToken);
+        const tokenFromDb = await TokenService.findToken(refreshToken);
+        if(!userData || !tokenFromDb) {
+            throw ApiError.UnauthorizedError();
+        }
+        const user = await User.findById(userData.id);
+        const userDto = new UserDTO(user);
+        const tokens = TokenService.generationToken({ ...userDto });
+        await TokenService.saveToken(userDto.id, tokens.refreshToken);
+        return {
+            ...tokens,
+            user: userDto,
+        }
+    }
+    async getAllUsers() {
+        const userData = await User.find();
+        return userData;
     }
 }
 

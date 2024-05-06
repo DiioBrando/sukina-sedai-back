@@ -6,6 +6,7 @@ import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import routerUser from './router/routerUser.js';
 import { ErrorMiddleware } from "./middlewaree/ErrorMiddleware.js";
+import routerComment from "./router/routerComment.js";
 
 
 const app = express();
@@ -14,11 +15,13 @@ dotenv.config();
 app.use(express.json());
 app.use(express.static('static'));
 app.use(fileUpload({}));
-app.use(cookieParser());
-app.use(cors({ origin: 'http://localhost:3000' }));
+app.use(cookieParser('cookieName', 'cookieValue', {
+    sameSite: 'lax',
+}));
+app.use(cors({ credentials: true, origin: process.env.CLIENT_URL }));
 
 app.use('/api', routerUser);
-
+app.use('/api', routerComment);
 
 // middleware для ошибок подключается последним в цепочке
 app.use(ErrorMiddleware);

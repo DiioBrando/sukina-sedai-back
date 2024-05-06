@@ -1,6 +1,6 @@
-import UserService from '../../service/UserService.js';
+import UserService from '../service/UserService.js';
 import { validationResult } from 'express-validator';
-import ApiError from '../../exceptions/ApiError.js';
+import ApiError from '../exceptions/ApiError.js';
 class UserController {
     async registration(req, res, next) {
         try {
@@ -31,9 +31,9 @@ class UserController {
     async logout(req, res, next) {
         try {
             const { refreshToken } = req.cookies;
-            const token = await UserService.logout(refreshToken);
+            await UserService.logout(refreshToken);
             res.clearCookie('refreshToken');
-            return res.status(200);
+            return res;
         } catch (e) {
             next(e);
         }
@@ -51,7 +51,10 @@ class UserController {
 
     async refresh(req, res, next) {
         try {
-
+            const { refreshToken } = req.cookies;
+            const userData = await UserService.refresh(refreshToken);
+            res.cookie('refreshToken', userData.refreshToken, { maxAge: 2 * 24 * 60 * 60 * 1000, httpOnly: true, });
+            return res.json(userData);
         } catch (e) {
             next(e);
         }
@@ -59,7 +62,8 @@ class UserController {
 
     async getAll(req, res, next) {
         try {
-
+            const users = await UserService.getAllUsers();
+            return res.json(users)
         } catch (e) {
             next(e);
         }

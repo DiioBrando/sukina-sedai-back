@@ -1,19 +1,29 @@
-import jwt from "jsonwebtoken";
-import { config } from "../config.js";
-export const authMiddlewaree = (req, res, next) => {
+import jwt from 'jsonwebtoken';
+import ApiError from '../exceptions/ApiError.js';
+import TokenService from "../service/TokenService.js";
+export const authMiddleware = (req, res, next) => {
     if(req.method === "OPTIONS") {
         next();
     }
 
     try {
-        const token = req.headers.authorization.split(' ')[1];
-        if(!token) {
-            return res.status(403).json({ message: "User is not auth" })
+        const authorizationHeader = req.headers.authorization;
+        if(!authorizationHeader) {
+            return next(ApiError.UnauthorizedError());
         }
-        const decodedDate = jwt.verify(token, config.secretKey);
+        const accessToken = req.headers.authorization.split(' ')[1];
+        if(!accessToken) {
+            return next(ApiError.UnauthorizedError());
+        }
+
+        const userData = TokenService.validationAccessToken(accessToken);
+        if(!userData) {
+            return next(ApiError.UnauthorizedError());
+        }
+        const decodedDate = jwt.verify(accessToken, process.env.JWT_ACCESS_SECRET_KEY);
         req.user = decodedDate;
         next();
     } catch (e) {
-        return res.status(403).json({ message: "User is not auth" })
+        return next(ApiError.UnauthorizedError());
     }
 }
