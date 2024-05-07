@@ -26,6 +26,20 @@ class CommentService {
         return updateComment;
     }
 
+    async deleteComment(comment, login) {
+        const user = await Comment.findOne({ login: login });
+        if(!user) {
+            throw ApiError.BadRequest();
+        }
+        const userDto = new UserDTO(user);
+        const updateComment = await Comment.findOneAndDelete({ login: userDto.login }, { comment: comment });
+        return updateComment;
+    }
+
+    async getAllComment() {
+        const commentData = await Comment.find();
+        return commentData;
+    }
 }
 
 

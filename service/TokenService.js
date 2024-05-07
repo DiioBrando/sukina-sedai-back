@@ -3,9 +3,8 @@ import jwt from 'jsonwebtoken';
 
 class TokenService {
     generationToken(payload) {
-        // сделать 30 секунд на access
-        const accessToken = jwt.sign(payload, process.env.JWT_ACCESS_SECRET_KEY, { expiresIn: '2d' })
-        const refreshToken = jwt.sign(payload, process.env.JWT_REFRESH_SECRET_KEY, { expiresIn: '2d' })
+        const accessToken = jwt.sign(payload, process.env.JWT_ACCESS_SECRET_KEY, { expiresIn: '30s' });
+        const refreshToken = jwt.sign(payload, process.env.JWT_REFRESH_SECRET_KEY, { expiresIn: '2d' });
         return {
             accessToken,
             refreshToken
