@@ -4,35 +4,33 @@ import UserDTO from "../dtos/UserDTO.js";
 import Comment from "../model/Comment.js";
 
 class CommentService {
-    async commentAdd(comment, login) {
+    async commentAdd(comment, _id) {
         if(comment.length === null) {
             throw ApiError.BadRequest();
         }
-        const user = await User.findOne({ login: login });
+        const user = await User.findOne({ _id: _id });
         if(!user) {
             throw ApiError.BadRequest();
         }
         const userDto = new UserDTO(user);
-        const comm = await Comment.create({ comment: comment, idUser: userDto.id, login: userDto.login });
-        return comm
+        const commentCreate = await Comment.create({ comment: comment, idUser: userDto.id, login: userDto.login });
+        return commentCreate;
     }
-    async updateComment(comment, login) {
-        const user = await Comment.findOne({ login: login });
-        if(!user) {
+    async updateComment(comment, _id) {
+        const userComment = await Comment.findOne({ _id });
+        if(!userComment) {
             throw ApiError.BadRequest();
         }
-        const userDto = new UserDTO(user);
-        const updateComment = await Comment.findOneAndUpdate({ login: userDto.login }, { comment: comment }, { new: true });
+        const updateComment = await Comment.findOneAndUpdate({ _id }, { comment: comment, timestamp: String(Date.now()), changed: true }, { new: true });
         return updateComment;
     }
 
-    async deleteComment(comment, login) {
-        const user = await Comment.findOne({ login: login });
-        if(!user) {
+    async deleteComment(_id) {
+        const userComment = await Comment.findOne({ _id });
+        if(!userComment) {
             throw ApiError.BadRequest();
         }
-        const userDto = new UserDTO(user);
-        const updateComment = await Comment.findOneAndDelete({ login: userDto.login }, { comment: comment });
+        const updateComment = await Comment.findOneAndDelete({ _id });
         return updateComment;
     }
 

@@ -33,7 +33,7 @@ class UserController {
             const { refreshToken } = req.cookies;
             await UserService.logout(refreshToken);
             res.clearCookie('refreshToken');
-            return res;
+            return res.json(200);
         } catch (e) {
             next(e);
         }
