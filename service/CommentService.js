@@ -1,11 +1,11 @@
 import ApiError from "../exceptions/ApiError.js";
 import User from "../model/users-model/User.js";
 import UserDTO from "../dtos/UserDTO.js";
-import Comment from "../model/Comment.js";
+import Comment from "../model/comment-model/Comment.js";
 
 class CommentService {
-    async commentAdd(comment, _id) {
-        if(comment.length === null) {
+    async commentAdd(comment, _id, animeId) {
+        if(comment.length === 0) {
             throw ApiError.BadRequest();
         }
         const user = await User.findOne({ _id: _id });
@@ -13,15 +13,15 @@ class CommentService {
             throw ApiError.BadRequest();
         }
         const userDto = new UserDTO(user);
-        const commentCreate = await Comment.create({ comment: comment, idUser: userDto.id, login: userDto.login });
+        const commentCreate = await Comment.create({ comment: comment, idUser: userDto.id, login: userDto.login, animeId: animeId });
         return commentCreate;
     }
-    async updateComment(comment, _id) {
+    async updateComment(comment, _id, animeId) {
         const userComment = await Comment.findOne({ _id });
         if(!userComment) {
             throw ApiError.BadRequest();
         }
-        const updateComment = await Comment.findOneAndUpdate({ _id }, { comment: comment, timestamp: String(Date.now()), changed: true }, { new: true });
+        const updateComment = await Comment.findOneAndUpdate({ _id }, { comment: comment, timestamp: String(Date.now()), changed: true, animeId: animeId }, { new: true });
         return updateComment;
     }
 
@@ -30,8 +30,8 @@ class CommentService {
         if(!userComment) {
             throw ApiError.BadRequest();
         }
-        const updateComment = await Comment.findOneAndDelete({ _id });
-        return updateComment;
+        const deleteComment = await Comment.findOneAndDelete({ _id });
+        return deleteComment;
     }
 
     async getAllComment() {

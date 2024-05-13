@@ -17,4 +17,5 @@ routerUser.get('/refresh', UserController.refresh);
 routerUser.get('/getAll', authMiddleware, UserController.getAll);
 
 
+
 export default routerUser;

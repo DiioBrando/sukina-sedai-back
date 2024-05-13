@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken';
 import ApiError from '../exceptions/ApiError.js';
-import TokenService from "../service/TokenService.js";
+import TokenService from '../service/TokenService.js';
 export const authMiddleware = (req, res, next) => {
     if(req.method === "OPTIONS") {
         next();

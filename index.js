@@ -7,6 +7,7 @@ import cookieParser from 'cookie-parser';
 import routerUser from './router/routerUser.js';
 import { ErrorMiddleware } from "./middlewaree/ErrorMiddleware.js";
 import routerComment from "./router/routerComment.js";
+import routerInventory from "./router/routerInventory.js";
 
 
 const app = express();
@@ -22,6 +23,7 @@ app.use(cors({ credentials: true, origin: process.env.CLIENT_URL }));
 
 app.use('/api', routerUser);
 app.use('/api', routerComment);
+app.use('/api', routerInventory);
 
 // middleware для ошибок подключается последним в цепочке
 app.use(ErrorMiddleware);
