@@ -16,12 +16,14 @@ class CommentService {
         const commentCreate = await Comment.create({ comment: comment, idUser: userDto.id, login: userDto.login, animeId: animeId });
         return commentCreate;
     }
-    async updateComment(comment, _id, animeId) {
+    async updateComment(comment, _id) {
         const userComment = await Comment.findOne({ _id });
+
         if(!userComment) {
             throw ApiError.BadRequest();
         }
-        const updateComment = await Comment.findOneAndUpdate({ _id }, { comment: comment, timestamp: String(Date.now()), changed: true, animeId: animeId }, { new: true });
+
+        const updateComment = await Comment.findOneAndUpdate({ _id }, { comment: comment, timestamp: String(Date.now()), changed: true }, { new: true });
         return updateComment;
     }
 

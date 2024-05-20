@@ -4,8 +4,9 @@ class CommentController {
 
     async commentAdd(req, res, next) {
         try {
-            const { _id, animeId, comment} = req.body;
-            const userData = await CommentService.commentAdd(comment, _id, animeId);
+            const { animeId, comment } = req.body;
+            const user = req.user;
+            const userData = await CommentService.commentAdd(comment, user.id, animeId);
             return res.json({ message: 'success add' });
         } catch (e) {
             next(e);

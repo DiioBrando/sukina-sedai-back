@@ -3,8 +3,9 @@ import InventoryService from '../service/InventoryService.js';
 class InventoryController {
     async addAnime(req, res, next) {
         try {
-            const { _id, animeId, typeItem } = req.body;
-            const userData = await InventoryService.addAnime(_id, animeId, typeItem);
+            const { animeId, typeItem } = req.body;
+            const user = req.user;
+            const userData = await InventoryService.addAnime(user.id, animeId, typeItem);
             return res.json({ message: 'success add' });
         } catch (e) {
             next(e);
@@ -13,7 +14,19 @@ class InventoryController {
     async deleteAnime(req, res, next) {
         try {
             const animeId = req.params.id;
-            const userData = await InventoryService.deleteAnime(animeId);
+            const userId = req.user;
+            const userData = await InventoryService.deleteAnime(animeId, userId.id);
+            return res.json({ message: 'success delete' });
+        } catch (e) {
+            next(e);
+        }
+    }
+
+    async deleteManyAnime(req, res, next) {
+        try {
+            const { animeId } = req.body;
+            const userId = req.user;
+            const userData = await InventoryService.deleteManyAnime(animeId, userId);
             return res.json({ message: 'success delete' });
         } catch (e) {
             next(e);
