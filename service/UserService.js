@@ -88,10 +88,13 @@ class UserService {
         }
     }
     async getAllUsers() {
-        const userData = await User.find();
-        return userData;
+        const users = await User.find();
+        return users.map((user) => new UserDTO(user));
     }
 }
 
 
 export default new UserService();
+
+
+

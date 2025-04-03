@@ -9,5 +9,6 @@ routerInventory.post('/add-anime-inventory', authMiddleware, InventoryController
 routerInventory.delete('/delete-anime-inventory/:id', authMiddleware, InventoryController.deleteAnime);
 routerInventory.delete('/delete-anime-inventory-array', authMiddleware, InventoryController.deleteManyAnime)
 routerInventory.patch('/update-anime-inventory/:id', authMiddleware, InventoryController.updateAnime);
-routerInventory.get('/getAll-items-inventory', authMiddleware, InventoryController.getAll);
+routerInventory.get('/getAll-anime-inventory/:id/:type', InventoryController.getAllInventory);
 export default routerInventory;
+

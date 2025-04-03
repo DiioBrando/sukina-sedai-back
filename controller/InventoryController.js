@@ -44,10 +44,13 @@ class InventoryController {
         }
     }
 
-    async getAll(req, res, next) {
+    async getAllInventory(req, res, next) {
         try {
-            const comment = await InventoryService.getAllAnime();
-            return res.json(comment);
+            const userId = req.params.id;
+            const categoryAnime = req.params.type;
+            const inventory = await InventoryService.getAllInventory();
+            const sortInventory = await InventoryService.filterInventoryAnime(inventory, userId, categoryAnime);
+            return res.json(sortInventory);
         } catch (e) {
             next(e);
         }

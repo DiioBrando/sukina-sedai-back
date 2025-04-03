@@ -47,11 +47,19 @@ class InventoryService {
         return updateAnime;
     }
 
-    async getAllAnime(){
+    async getAllInventory(){
         const userData = await Inventory.find();
         return userData;
+    }
+
+    async filterInventoryAnime(arr, idUser, categoryAnime) {
+        const currentUserAnime = arr.filter(item => item.idUser === idUser && item.typeItem === categoryAnime).map(item => item.animeId).reduce((acc, cur) => acc + cur + ' ', '').trim().split(' ').join(',');
+
+        console.log(arr.filter(item => item.typeItem === categoryAnime))
+        return currentUserAnime;
     }
 }
 
 
 export default new InventoryService();
+

@@ -8,6 +8,7 @@ export const authMiddleware = (req, res, next) => {
 
     try {
         const authorizationHeader = req.headers.authorization;
+        console.log(req.headers)
         if(!authorizationHeader) {
             return next(ApiError.UnauthorizedError());
         }

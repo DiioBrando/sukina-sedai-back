@@ -39,6 +39,51 @@ class CommentController {
             next(e);
         }
     }
+
+    async likeAdd(req, res, next) {
+        try {
+            const { idComment } = req.body;
+            const currentUserIdAddingLike = req.user;
+            const like = await CommentService.likeAdd(currentUserIdAddingLike.id, idComment);
+            return res.json({ message: 'success add' });
+        } catch (e) {
+            next(e);
+        }
+    }
+
+    async dislikeAdd(req, res, next) {
+        try {
+            const { idComment } = req.body;
+            const currentUserIdAddingLike = req.user;
+            const dislike = await CommentService.dislikeAdd(currentUserIdAddingLike.id, idComment);
+            return res.json({ message: 'success add' });
+        } catch (e) {
+            next(e);
+        }
+    }
+
+    async deleteDislike(req, res, next) {
+        try {
+            const { idComment } = req.body;
+            const currentUserIdAddingLike = req.user;
+            const dislike = await CommentService.deleteDislike(currentUserIdAddingLike.id, idComment);
+            return res.json({ message: 'success delete dislike' });
+        } catch (e) {
+            next(e);
+        }
+    }
+
+    async deleteLike(req, res, next) {
+        try {
+            const { idComment } = req.body;
+            const currentUserIdAddingLike = req.user;
+            const dislike = await CommentService.deleteLike(currentUserIdAddingLike.id, idComment);
+            return res.json({ message: 'success delete like' });
+        } catch (e) {
+            next(e);
+        }
+    }
+
 }
 
 
